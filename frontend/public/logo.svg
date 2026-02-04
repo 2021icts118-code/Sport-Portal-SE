@@ -1,0 +1,21 @@
+<svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="25" cy="25" r="24" fill="#2563eb" opacity="0.1" stroke="#2563eb" stroke-width="2"/>
+  
+  <!-- Trophy icon -->
+  <g transform="translate(25, 25)">
+    <!-- Trophy cup -->
+    <path d="M -6 -8 L -6 -2 Q -6 2 -2 4 L 2 4 Q 6 2 6 -2 L 6 -8 Z" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+    
+    <!-- Trophy handles -->
+    <path d="M -8 -6 Q -10 -4 -8 0" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+    <path d="M 8 -6 Q 10 -4 8 0" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+    
+    <!-- Trophy base -->
+    <rect x="-4" y="4" width="8" height="1" fill="#2563eb"/>
+    <rect x="-6" y="5" width="12" height="1" fill="#2563eb"/>
+    
+    <!-- Star on top -->
+    <text x="0" y="-10" font-size="6" font-weight="bold" fill="#2563eb" text-anchor="middle">★</text>
+  </g>
+</svg>
