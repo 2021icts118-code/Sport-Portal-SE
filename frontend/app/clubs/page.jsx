@@ -38,152 +38,75 @@ function ClubsContent() {
   const [selectedClub, setSelectedClub] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const clubs = [
-    {
-      id: 1,
-      name: "Cricket Club",
-      category: "team",
-      members: 45,
-      captain: "John Smith",
-      achievements: ["University Champions 2025", "Regional Winners"],
-      description: "Premier cricket club with a rich history of excellence",
-      color: "from-blue-500 to-blue-600"
-    },
-    {
-      id: 2,
-      name: "Basketball Club",
-      category: "team",
-      members: 32,
-      captain: "Sarah Johnson",
-      achievements: ["League Champions 2024", "MVP Awards"],
-      description: "Dynamic basketball team known for speed and agility",
-      color: "from-orange-500 to-red-500"
-    },
-    {
-      id: 3,
-      name: "Football Club",
-      category: "team",
-      members: 52,
-      captain: "Mike Davis",
-      achievements: ["Cup Winners 2025", "Best Defense"],
-      description: "Passionate football club with dedicated players",
-      color: "from-green-500 to-emerald-500"
-    },
-    {
-      id: 4,
-      name: "Swimming Club",
-      category: "individual",
-      members: 28,
-      captain: "Emma Wilson",
-      achievements: ["Multiple Gold Medals", "Record Holders"],
-      description: "Elite swimming program for competitive athletes",
-      color: "from-cyan-500 to-blue-500"
-    },
-    {
-      id: 5,
-      name: "Athletics Club",
-      category: "individual",
-      members: 38,
-      captain: "David Brown",
-      achievements: ["National Qualifiers", "Track Records"],
-      description: "Comprehensive athletics training for all events",
-      color: "from-purple-500 to-pink-500",
-      activities: [
-        "100m Sprint",
-        "200m Sprint",
-        "400m Run",
-        "800m Run",
-        "1500m Run",
-        "5000m Run",
-        "10000m Run",
-        "110m Hurdles",
-        "400m Hurdles",
-        "High Jump",
-        "Long Jump",
-        "Triple Jump",
-        "Pole Vault",
-        "Shot Put",
-        "Discus Throw",
-        "Javelin Throw",
-        "Hammer Throw",
-        "4x100m Relay",
-        "4x400m Relay",
-        "Marathon Training",
-        "Cross Country",
-        "Race Walking"
-      ]
-    },
-    {
-      id: 6,
-      name: "Elle Club",
-      category: "team",
-      members: 24,
-      captain: "Lisa Chen",
-      achievements: ["Rising Stars", "Team Spirit Award"],
-      description: "Graceful and strategic elle team showcasing elegance in motion",
-      color: "from-pink-500 to-rose-500"
-    },
-    {
-      id: 7,
-      name: "Netball Club",
-      category: "team",
-      members: 30,
-      captain: "Rachel Green",
-      achievements: ["Division Winners", "Sportsmanship Award"],
-      description: "Skilled netball team combining strategy and athletic excellence",
-      color: "from-indigo-500 to-purple-500"
-    },
-    {
-      id: 8,
-      name: "Volleyball Club",
-      category: "team",
-      members: 24,
-      captain: "Alex Turner",
-      achievements: ["League Champions", "Team Excellence"],
-      description: "Dynamic volleyball team with exceptional athletic performance",
-      color: "from-yellow-500 to-orange-500"
-    },
-    {
-      id: 12,
-      name: "Rugby Club",
-      category: "team",
-      members: 30,
-      captain: "Jake Thompson",
-      achievements: ["National Champions", "Rugby Excellence"],
-      description: "Powerful rugby team showcasing strength and team spirit",
-      color: "from-red-500 to-orange-500"
-    },
-    {
-      id: 9,
-      name: "Badminton Club",
-      category: "individual",
-      members: 18,
-      captain: "Jordan Lee",
-      achievements: ["Tournament Winners", "Skill Awards"],
-      description: "Elite badminton players showcasing speed and precision",
-      color: "from-indigo-500 to-purple-500"
-    },
-    {
-      id: 10,
-      name: "Carrom Club",
-      category: "individual",
-      members: 12,
-      captain: "Sam Patel",
-      achievements: ["Board Champions", "Strategy Masters"],
-      description: "Strategic carrom players with exceptional precision",
-      color: "from-orange-500 to-red-500"
-    },
-    {
-      id: 11,
-      name: "Chess Club",
-      category: "individual",
-      members: 15,
-      captain: "Maria Garcia",
-      achievements: ["Regional Champions", "Grandmaster Candidates"],
-      description: "Tactical chess players with strategic brilliance",
-      color: "from-amber-500 to-yellow-500"
+  const [clubs, setClubs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchClubs = async () => {
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+      const res = await fetch(`${API_URL}/api/clubs?t=${new Date().getTime()}`, {
+        cache: 'no-store',
+        headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+
+        const clubsArray = Array.isArray(data) ? data : [];
+
+        // Parse logged-in user to check membership status
+        let userId = null;
+        if (typeof window !== "undefined") {
+          const userData = localStorage.getItem("user");
+          if (userData) {
+            try {
+              const parsed = JSON.parse(userData);
+              userId = parsed.id || parsed._id; // Handle different ID formats
+            } catch (e) { console.error("Error parsing user data", e); }
+          }
+        }
+
+        const joined = new Set();
+        const pending = new Set();
+
+        const formattedClubs = clubsArray.map(club => {
+          // Check membership if user is logged in
+          if (userId) {
+            // Check if user is in members array (handles both array of strings and array of objects)
+            const isMember = club.members?.some(m => m === userId || m._id === userId);
+            if (isMember) joined.add(club._id);
+
+            // Check if user is in pendingMembers array
+            const isPending = club.pendingMembers?.some(m => m === userId || m._id === userId);
+            if (isPending) pending.add(club._id);
+          }
+
+          return {
+            ...club,
+            id: club._id,
+            members: club.memberCount || club.members?.length || 0,
+            captain: club.captain?.firstName ? `${club.captain.firstName} ${club.captain.lastName}` : " ",
+            achievements: club.achievements || [],
+            description: club.description || "Join this club to participate in events.",
+            color: club.color || "from-blue-500 to-blue-600",
+            activities: club.activities || []
+          };
+        });
+
+        setJoinedClubs(joined);
+        setJoinRequests(pending);
+        setClubs(formattedClubs);
+      }
+    } catch (error) {
+      console.error("Failed to fetch clubs:", error);
+      showNotification("Failed to load clubs", "error");
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  useEffect(() => {
+    fetchClubs();
+  }, []);
 
   useEffect(() => {
     const sportParam = searchParams.get("sport");
@@ -210,8 +133,8 @@ function ClubsContent() {
   // Handle join club
   const handleJoinClub = async (clubId, clubName) => {
     // Check if user is authenticated
-    const user = typeof window !== "undefined" ? localStorage.getItem("user") : null;
-    if (!user) {
+    const savedUser = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+    if (!savedUser) {
       showNotification("Please login to join a club", "error");
       setTimeout(() => {
         window.location.href = "/login";
@@ -232,14 +155,28 @@ function ClubsContent() {
     setLoadingClub(clubId);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const token = localStorage.getItem("token");
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
-      setJoinRequests(prev => new Set([...prev, clubId]));
-      showNotification(`Join request sent to ${clubName}. Waiting for approval.`, "info");
+      const res = await fetch(`${API_URL}/api/clubs/${clubId}/join`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setJoinRequests(prev => new Set([...prev, clubId]));
+        showNotification(`Join request sent to ${clubName}. Waiting for approval.`, "success");
+      } else {
+        throw new Error(data.message || "Failed to join");
+      }
     } catch (error) {
       console.error("Join club error:", error);
-      showNotification("Failed to join club. Please try again.", "error");
+      showNotification(error.message || "Failed to join club. Please try again.", "error");
     } finally {
       setLoadingClub(null);
     }
@@ -288,17 +225,22 @@ function ClubsContent() {
       )}
 
       {/* Header */}
-      <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20" />
-        <div className="relative max-w-7xl mx-auto px-4 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-              Sports Clubs
-            </h1>
-            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-              Join passionate communities and excel in your favorite sports
-            </p>
-          </div>
+      <div className="relative overflow-hidden bg-gray-900 min-h-[500px] flex items-center justify-center">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1570498839593-e565b39455fc?q=80&w=2000&auto=format&fit=crop"
+            alt="Sports Stadium"
+            className="h-full w-full object-cover object-center opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/20" />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-6xl font-black text-white mb-6 drop-shadow-lg">
+            Sports Clubs
+          </h1>
+          <p className="text-xl text-gray-200 max-w-2xl mx-auto font-medium drop-shadow">
+            Join passionate communities and excel in your favorite sports
+          </p>
         </div>
       </div>
 
@@ -392,13 +334,13 @@ function ClubsContent() {
               </div>
 
               <div className="flex gap-2">
-                <Link
-                  href={`/sports/${encodeURIComponent(club.name.replace(" Club", ""))}`}
+                <button
+                  onClick={() => handleViewDetails(club.id)}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   View Details
                   <ChevronRight className="h-4 w-4" />
-                </Link>
+                </button>
                 {(() => {
                   const buttonState = getButtonState(club.id);
                   return (
@@ -432,133 +374,118 @@ function ClubsContent() {
       </div>
 
       {/* Club Details Modal */}
+      {/* Club Details Modal */}
       {showModal && selectedClub && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">{selectedClub.name}</h2>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <X className="h-6 w-6 text-gray-500" />
-                </button>
-              </div>
-            </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[40px] shadow-2xl animate-in zoom-in-95 duration-300 relative">
+            <button
+              onClick={(e) => { e.stopPropagation(); setShowModal(false); }}
+              className="absolute top-6 right-6 p-2 bg-white/50 hover:bg-white rounded-full transition-all z-10"
+            >
+              <X className="h-6 w-6 text-slate-500" />
+            </button>
 
-            <div className="p-6 space-y-6">
-              <div className="flex items-center gap-4">
-                <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${selectedClub.color} flex items-center justify-center`}>
-                  <Trophy className="h-8 w-8 text-white" />
+            <div className="grid md:grid-cols-2">
+              {/* Left Side: Visuals */}
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-900 p-10 flex flex-col justify-between text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-20 opacity-10 transform translate-x-1/2 -translate-y-1/2">
+                  <Star size={300} fill="white" />
                 </div>
+
                 <div>
-                  <p className="text-lg font-semibold text-gray-900 capitalize">{selectedClub.category} Sports</p>
-                  <p className="text-gray-600">{selectedClub.members} active members</p>
+                  <div className="h-24 w-24 bg-white/10 backdrop-blur-md rounded-3xl flex items-center justify-center text-6xl shadow-xl border border-white/20 mb-8">
+                    {selectedClub.logo || (selectedClub.sport?.icon || '🏆')}
+                  </div>
+                  <h2 className="text-4xl font-black leading-tight mb-4">{selectedClub.name}</h2>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider">{selectedClub.category} Sport</span>
+                    <span className="px-3 py-1 bg-emerald-500/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider text-emerald-300">Active Season</span>
+                  </div>
+                </div>
+
+                <div className="mt-12">
+                  <p className="font-medium text-blue-100/90 leading-relaxed mb-8">
+                    {selectedClub.description || "Join this club to be part of a thriving community of athletes striving for excellence."}
+                  </p>
+                  {(() => {
+                    const buttonState = getButtonState(selectedClub.id);
+                    return (
+                      <button
+                        onClick={() => handleJoinClub(selectedClub.id, selectedClub.name)}
+                        disabled={buttonState.disabled}
+                        className={`w-full py-4 font-black rounded-2xl shadow-xl flex items-center justify-center gap-2 group transition-all ${buttonState.disabled
+                          ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                          : "bg-white text-blue-900 hover:bg-blue-50"
+                          }`}
+                      >
+                        {loadingClub === selectedClub.id ? (
+                          <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <>
+                            {joinedClubs.has(selectedClub.id) ? (
+                              <CheckCircle className="h-5 w-5" />
+                            ) : joinRequests.has(selectedClub.id) ? (
+                              <AlertCircle className="h-5 w-5" />
+                            ) : (
+                              <span>Request to Join</span>
+                            )}
+                            {joinedClubs.has(selectedClub.id) ? "Already a Member" : joinRequests.has(selectedClub.id) ? "Request Pending" : ""}
+                            {!buttonState.disabled && (
+                              <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                            )}
+                          </>
+                        )}
+                      </button>
+                    );
+                  })()}
                 </div>
               </div>
 
-              <p className="text-gray-700">{selectedClub.description}</p>
+              {/* Right Side: Details */}
+              <div className="p-10 bg-slate-50">
+                <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
+                  <Users className="text-blue-500" /> Club Leadership
+                </h3>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Crown className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Captain</p>
-                      <p className="text-gray-600">{selectedClub.captain}</p>
-                    </div>
+                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm mb-8 flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center font-black text-slate-400 text-lg">
+                    {selectedClub.captain?.charAt(0) || 'C'}
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Users className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Members</p>
-                      <p className="text-gray-600">{selectedClub.members} members</p>
-                    </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Captain</p>
+                    <p className="text-lg font-black text-slate-800">
+                      {selectedClub.captain || "TBA"}
+                    </p>
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Award className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Achievements</p>
-                      <p className="text-gray-600">{selectedClub.achievements.length} major wins</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Star className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Category</p>
-                      <p className="text-gray-600 capitalize">{selectedClub.category}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              {selectedClub.achievements.length > 0 && (
-                <div className="border-t border-gray-200 pt-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Recent Achievements</h3>
-                  <div className="space-y-2">
-                    {selectedClub.achievements.map((achievement, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                        <span className="text-gray-700">{achievement}</span>
+                <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
+                  <Trophy className="text-amber-500" /> Achievements
+                </h3>
+
+                <div className="space-y-3 mb-8">
+                  {selectedClub.achievements && selectedClub.achievements.length > 0 ? (
+                    selectedClub.achievements.map((achievement, i) => (
+                      <div key={i} className="flex items-center gap-3 text-sm font-bold text-slate-600 bg-white p-3 rounded-xl border border-slate-100">
+                        <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+                        {achievement}
                       </div>
-                    ))}
+                    ))
+                  ) : (
+                    <p className="text-slate-400 text-sm font-medium italic">No major achievements listed yet.</p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-100">
+                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Members</p>
+                    <p className="text-2xl font-black text-slate-800">{selectedClub.members || 0}</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-2xl border border-slate-100">
+                    <p className="text-xs font-bold text-slate-400 uppercase mb-1">Status</p>
+                    <p className="text-2xl font-black text-emerald-600">Active</p>
                   </div>
                 </div>
-              )}
-
-              {selectedClub.activities && selectedClub.activities.length > 0 && (
-                <div className="border-t border-gray-200 pt-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Available Activities After Joining</h3>
-                  <p className="text-sm text-gray-600 mb-3">Members can participate in the following athletics events:</p>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {selectedClub.activities.map((activity, index) => (
-                      <div key={index} className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                        <span className="text-sm text-gray-700">{activity}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="flex gap-3 pt-4">
-                {(() => {
-                  const buttonState = getButtonState(selectedClub.id);
-                  return (
-                    <button
-                      onClick={() => handleJoinClub(selectedClub.id, selectedClub.name)}
-                      disabled={buttonState.disabled}
-                      className={`flex-1 font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 ${buttonState.disabled
-                        ? buttonState.className
-                        : buttonState.className + " hover:opacity-90"
-                        }`}
-                    >
-                      {loadingClub === selectedClub.id ? (
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      ) : (
-                        <>
-                          {joinedClubs.has(selectedClub.id) ? (
-                            <CheckCircle className="h-5 w-5" />
-                          ) : joinRequests.has(selectedClub.id) ? (
-                            <AlertCircle className="h-5 w-5" />
-                          ) : (
-                            <UserPlus className="h-5 w-5" />
-                          )}
-                          {buttonState.text}
-                        </>
-                      )}
-                    </button>
-                  );
-                })()}
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Close
-                </button>
               </div>
             </div>
           </div>

@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Club = require('../models/Club');
 const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
 
+
 // All routes here require admin access
 router.use(authMiddleware);
 router.use(adminMiddleware);
@@ -25,6 +26,7 @@ router.put('/users/:id/role', async (req, res) => {
     try {
         const { role } = req.body;
         const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true }).select('-password');
+
         res.json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -36,7 +38,35 @@ router.put('/users/:id/status', async (req, res) => {
     try {
         const { status } = req.body;
         const user = await User.findByIdAndUpdate(req.params.id, { status }, { new: true }).select('-password');
+
         res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Delete user
+router.delete('/users/:id', async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+
+        res.json({ success: true, message: 'User deleted' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Update user details (General)
+router.put('/users/:id', async (req, res) => {
+    try {
+        const { firstName, lastName, email, role, status } = req.body;
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { firstName, lastName, email, role, status },
+            { new: true, runValidators: true }
+        ).select('-password');
+        res.json(user);
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -73,6 +103,8 @@ router.post('/clubs/:clubId/approve/:userId', async (req, res) => {
             $addToSet: { joinedClubs: clubId }
         });
 
+
+
         res.json({ success: true, club });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -87,6 +119,8 @@ router.post('/clubs/:clubId/reject/:userId', async (req, res) => {
         const club = await Club.findByIdAndUpdate(clubId, {
             $pull: { pendingMembers: userId }
         }, { new: true });
+
+
 
         res.json({ success: true, club });
     } catch (error) {
@@ -109,6 +143,7 @@ router.put('/clubs/:id/status', async (req, res) => {
     try {
         const { status } = req.body;
         const club = await Club.findByIdAndUpdate(req.params.id, { status }, { new: true });
+
         res.json(club);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -116,3 +151,4 @@ router.put('/clubs/:id/status', async (req, res) => {
 });
 
 module.exports = router;
+

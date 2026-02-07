@@ -50,13 +50,15 @@ export default function ExploreCategory() {
       try {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
         const [categoriesRes, statsRes] = await Promise.all([
-          fetch(`${API_URL}/api/categories`, {
+          fetch(`${API_URL}/api/categories?t=${new Date().getTime()}`, {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' },
+            cache: 'no-store'
           }),
-          fetch(`${API_URL}/api/stats`, {
+          fetch(`${API_URL}/api/stats?t=${new Date().getTime()}`, {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' },
+            cache: 'no-store'
           })
         ]);
 
@@ -72,7 +74,7 @@ export default function ExploreCategory() {
         setStats(statsData);
         setLoading(false);
       } catch (err) {
-        console.error("Error fetching data:", err);
+        console.warn("API not available, using fallback data. Error:", err.message);
         // Fallback data when API is not available
         setCategories([
           {

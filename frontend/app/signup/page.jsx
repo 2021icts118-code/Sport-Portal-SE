@@ -220,7 +220,6 @@ export default function SignupPage() {
                         onChange={handleInputChange}
                         className={`w-full px-4 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.firstName ? "border-red-500" : "border-gray-600"
                           }`}
-                        placeholder="John"
                       />
                       {errors.firstName && (
                         <p className="mt-1 text-sm text-red-400">{errors.firstName}</p>
@@ -238,7 +237,6 @@ export default function SignupPage() {
                         onChange={handleInputChange}
                         className={`w-full px-4 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.lastName ? "border-red-500" : "border-gray-600"
                           }`}
-                        placeholder="Doe"
                       />
                       {errors.lastName && (
                         <p className="mt-1 text-sm text-red-400">{errors.lastName}</p>
@@ -261,7 +259,6 @@ export default function SignupPage() {
                         onChange={handleInputChange}
                         className={`w-full pl-10 pr-4 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.email ? "border-red-500" : "border-gray-600"
                           }`}
-                        placeholder="john.doe@stu.uov.lk"
                       />
                     </div>
                     {errors.email && (
@@ -284,7 +281,6 @@ export default function SignupPage() {
                         onChange={handleInputChange}
                         className={`w-full pl-10 pr-4 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.phone ? "border-red-500" : "border-gray-600"
                           }`}
-                        placeholder="+94 77 123 4567"
                       />
                     </div>
                     {errors.phone && (
@@ -325,7 +321,6 @@ export default function SignupPage() {
                         onChange={handleInputChange}
                         className={`w-full pl-10 pr-4 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.studentId ? "border-red-500" : "border-gray-600"
                           }`}
-                        placeholder="UOV/2020/001"
                       />
                     </div>
                     {errors.studentId && (
@@ -374,7 +369,6 @@ export default function SignupPage() {
                         onChange={handleInputChange}
                         className={`w-full pl-10 pr-12 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.password ? "border-red-500" : "border-gray-600"
                           }`}
-                        placeholder="Create a strong password"
                       />
                       <button
                         type="button"
@@ -404,7 +398,6 @@ export default function SignupPage() {
                         onChange={handleInputChange}
                         className={`w-full pl-10 pr-12 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.confirmPassword ? "border-red-500" : "border-gray-600"
                           }`}
-                        placeholder="Confirm your password"
                       />
                       <button
                         type="button"

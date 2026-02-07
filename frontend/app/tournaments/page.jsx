@@ -176,150 +176,89 @@ export default function TournamentsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
-      <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20" />
-        <div className="relative max-w-7xl mx-auto px-4 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-              Tournaments
-            </h1>
-            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-              Compete in exciting sporting events and showcase your athletic excellence
-            </p>
-          </div>
+      <div className="relative overflow-hidden bg-gray-900 min-h-[500px] flex items-center justify-center">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1575361204480-aadea25e6e68?q=80&w=2000&auto=format&fit=crop"
+            alt="Football Stadium"
+            className="h-full w-full object-cover object-center opacity-50"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/20" />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-6xl font-black text-white mb-6 drop-shadow-lg">
+            University Tournaments
+          </h1>
+          <p className="text-xl text-gray-200 max-w-2xl mx-auto font-medium drop-shadow">
+            Compete in exciting sporting events and showcase your athletic excellence
+          </p>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-7xl mx-auto px-4 py-12 -mt-20 relative z-10">
         {/* Stats Section */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-blue-200 shadow-lg text-center">
+          <div className="bg-white rounded-xl p-6 border border-blue-100 shadow-xl text-center transform hover:-translate-y-1 transition-transform">
             <Trophy className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">10+</div>
-            <div className="text-gray-600 text-sm">Active Tournaments</div>
+            <div className="text-2xl font-black text-gray-900">10+</div>
+            <div className="text-gray-600 text-sm font-semibold">Active Tournaments</div>
           </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-blue-200 shadow-lg text-center">
+          <div className="bg-white rounded-xl p-6 border border-blue-100 shadow-xl text-center transform hover:-translate-y-1 transition-transform">
             <Users className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">200+</div>
-            <div className="text-gray-600 text-sm">Participants</div>
+            <div className="text-2xl font-black text-gray-900">200+</div>
+            <div className="text-gray-600 text-sm font-semibold">Participants</div>
           </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-blue-200 shadow-lg text-center">
+          <div className="bg-white rounded-xl p-6 border border-blue-100 shadow-xl text-center transform hover:-translate-y-1 transition-transform">
             <Award className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">$25K+</div>
-            <div className="text-gray-600 text-sm">Total Prize Pool</div>
+            <div className="text-2xl font-black text-gray-900">$25K+</div>
+            <div className="text-gray-600 text-sm font-semibold">Total Prize Pool</div>
           </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-blue-200 shadow-lg text-center">
+          <div className="bg-white rounded-xl p-6 border border-blue-100 shadow-xl text-center transform hover:-translate-y-1 transition-transform">
             <Target className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">9</div>
-            <div className="text-gray-600 text-sm">Sports Categories</div>
+            <div className="text-2xl font-black text-gray-900">9</div>
+            <div className="text-gray-600 text-sm font-semibold">Sports Categories</div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-8 justify-center">
+        <div className="flex flex-wrap gap-3 mb-12 justify-center bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-gray-100">
           <button
             onClick={() => setActiveFilter("all")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "all"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
+            className={`px-6 py-3 rounded-full font-bold transition-all flex items-center gap-2 ${activeFilter === "all"
+              ? "bg-blue-600 text-white shadow-lg scale-105"
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
           >
             <Trophy className="h-4 w-4" />
-            All Tournaments
+            All
           </button>
-          <button
-            onClick={() => setActiveFilter("cricket")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "cricket"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
-              }`}
-          >
-            🏏 Cricket
-          </button>
-          <button
-            onClick={() => setActiveFilter("basketball")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "basketball"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
-              }`}
-          >
-            🏀 Basketball
-          </button>
-          <button
-            onClick={() => setActiveFilter("football")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "football"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
-              }`}
-          >
-            ⚽ Football
-          </button>
-          <button
-            onClick={() => setActiveFilter("volleyball")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "volleyball"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
-              }`}
-          >
-            🏐 Volleyball
-          </button>
-          <button
-            onClick={() => setActiveFilter("elle")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "elle"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
-              }`}
-          >
-            🎯 Elle
-          </button>
-          <button
-            onClick={() => setActiveFilter("badminton")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "badminton"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
-              }`}
-          >
-            🏸 Badminton
-          </button>
-          <button
-            onClick={() => setActiveFilter("carrom")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "carrom"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
-              }`}
-          >
-            🎱 Carrom
-          </button>
-          <button
-            onClick={() => setActiveFilter("chess")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "chess"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
-              }`}
-          >
-            ♟️ Chess
-          </button>
-          <button
-            onClick={() => setActiveFilter("rugby")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "rugby"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
-              }`}
-          >
-            🏉 Rugby
-          </button>
-          <button
-            onClick={() => setActiveFilter("netball")}
-            className={`px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 ${activeFilter === "netball"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white text-gray-700 hover:bg-blue-50 hover:shadow-md border border-blue-200"
-              }`}
-          >
-            🏐 Netball
-          </button>
+          {[
+            { id: "cricket", label: "Cricket", icon: "🏏" },
+            { id: "basketball", label: "Basketball", icon: "🏀" },
+            { id: "football", label: "Football", icon: "⚽" },
+            { id: "volleyball", label: "Volleyball", icon: "🏐" },
+            { id: "elle", label: "Elle", icon: "🎯" },
+            { id: "badminton", label: "Badminton", icon: "🏸" },
+            { id: "carrom", label: "Carrom", icon: "🎱" },
+            { id: "chess", label: "Chess", icon: "♟️" },
+            { id: "rugby", label: "Rugby", icon: "🏉" },
+            { id: "netball", label: "Netball", icon: "🏐" },
+          ].map((sport) => (
+            <button
+              key={sport.id}
+              onClick={() => setActiveFilter(sport.id)}
+              className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all flex items-center gap-2 ${activeFilter === sport.id
+                ? "bg-blue-600 text-white shadow-lg scale-105"
+                : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
+                }`}
+            >
+              <span>{sport.icon}</span> {sport.label}
+            </button>
+          ))}
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredTournaments.length > 0 ? (
             filteredTournaments.map((tournament) => (
               <div
@@ -394,6 +333,7 @@ export default function TournamentsPage() {
                   </button>
                 </div>
               </div>
+
             ))
           ) : (
             <div className="col-span-full text-center py-12">
@@ -406,117 +346,118 @@ export default function TournamentsPage() {
       </div>
 
       {/* Tournament Details Modal */}
-      {showModal && selectedTournament && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">{selectedTournament.title}</h2>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <X className="h-6 w-6 text-gray-500" />
-                </button>
-              </div>
-            </div>
-
-            <div className="p-6 space-y-6">
-              <div className="flex items-center gap-2">
-                <Link
-                  href={`/sports/${encodeURIComponent(selectedTournament.sport.charAt(0).toUpperCase() + selectedTournament.sport.slice(1))}`}
-                  className="flex items-center gap-2 hover:text-blue-600 transition-colors"
-                >
-                  <Trophy className="h-5 w-5 text-blue-600" />
-                  <span className="text-lg font-semibold text-gray-900 capitalize">{selectedTournament.sport}</span>
-                </Link>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${selectedTournament.status === "upcoming"
-                  ? "bg-blue-100 text-blue-800"
-                  : selectedTournament.status === "ongoing"
-                    ? "bg-amber-100 text-amber-800"
-                    : "bg-red-100 text-red-800"
-                  }`}>
-                  {selectedTournament.status}
-                </span>
-              </div>
-
-              <p className="text-gray-700">{selectedTournament.description}</p>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Date</p>
-                      <p className="text-gray-600">{new Date(selectedTournament.date).toLocaleDateString()}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Location</p>
-                      <p className="text-gray-600">{selectedTournament.location}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Users className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Participants</p>
-                      <p className="text-gray-600">{selectedTournament.participants} teams</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Award className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Prize Pool</p>
-                      <p className="text-gray-600">{selectedTournament.prize}</p>
-                    </div>
-                  </div>
+      {
+        showModal && selectedTournament && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+              <div className="p-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-gray-900">{selectedTournament.title}</h2>
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <X className="h-6 w-6 text-gray-500" />
+                  </button>
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <Target className="h-5 w-5 text-blue-600" />
-                  <div>
-                    <p className="font-medium text-gray-900">Format</p>
-                    <p className="text-gray-600">{selectedTournament.format}</p>
-                  </div>
+              <div className="p-6 space-y-6">
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/sports/${encodeURIComponent(selectedTournament.sport.charAt(0).toUpperCase() + selectedTournament.sport.slice(1))}`}
+                    className="flex items-center gap-2 hover:text-blue-600 transition-colors"
+                  >
+                    <Trophy className="h-5 w-5 text-blue-600" />
+                    <span className="text-lg font-semibold text-gray-900 capitalize">{selectedTournament.sport}</span>
+                  </Link>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${selectedTournament.status === "upcoming"
+                    ? "bg-blue-100 text-blue-800"
+                    : selectedTournament.status === "ongoing"
+                      ? "bg-amber-100 text-amber-800"
+                      : "bg-red-100 text-red-800"
+                    }`}>
+                    {selectedTournament.status}
+                  </span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Crown className="h-5 w-5 text-blue-600" />
-                  <div>
-                    <p className="font-medium text-gray-900">Organizer</p>
-                    <p className="text-gray-600">{selectedTournament.organizer}</p>
-                  </div>
-                </div>
-              </div>
 
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => handleRegister(selectedTournament.id)}
-                  className={`flex-1 font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 ${selectedTournament.status === "upcoming"
-                    ? "bg-green-600 hover:bg-green-700 text-white"
-                    : "bg-gray-400 text-gray-600 cursor-not-allowed"
-                    }`}
-                  disabled={selectedTournament.status !== "upcoming"}
-                >
-                  <Users className="h-5 w-5" />
-                  {selectedTournament.status === "upcoming" ? "Register Now" : "Registration Closed"}
-                </button>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Close
-                </button>
+                <p className="text-gray-700">{selectedTournament.description}</p>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="h-5 w-5 text-blue-600" />
+                      <div>
+                        <p className="font-medium text-gray-900">Date</p>
+                        <p className="text-gray-600">{new Date(selectedTournament.date).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <MapPin className="h-5 w-5 text-blue-600" />
+                      <div>
+                        <p className="font-medium text-gray-900">Location</p>
+                        <p className="text-gray-600">{selectedTournament.location}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Users className="h-5 w-5 text-blue-600" />
+                      <div>
+                        <p className="font-medium text-gray-900">Participants</p>
+                        <p className="text-gray-600">{selectedTournament.participants} teams</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Award className="h-5 w-5 text-blue-600" />
+                      <div>
+                        <p className="font-medium text-gray-900">Prize Pool</p>
+                        <p className="text-gray-600">{selectedTournament.prize}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-gray-200 pt-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Target className="h-5 w-5 text-blue-600" />
+                    <div>
+                      <p className="font-medium text-gray-900">Format</p>
+                      <p className="text-gray-600">{selectedTournament.format}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Crown className="h-5 w-5 text-blue-600" />
+                    <div>
+                      <p className="font-medium text-gray-900">Organizer</p>
+                      <p className="text-gray-600">{selectedTournament.organizer}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <button
+                    onClick={() => handleRegister(selectedTournament.id)}
+                    className={`flex-1 font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 ${selectedTournament.status === "upcoming"
+                      ? "bg-green-600 hover:bg-green-700 text-white"
+                      : "bg-gray-400 text-gray-600 cursor-not-allowed"
+                      }`}
+                    disabled={selectedTournament.status !== "upcoming"}
+                  >
+                    <Users className="h-5 w-5" />
+                    {selectedTournament.status === "upcoming" ? "Register Now" : "Registration Closed"}
+                  </button>
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )
+        )
       }
     </div >
   );

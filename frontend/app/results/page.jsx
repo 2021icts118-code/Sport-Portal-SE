@@ -65,17 +65,23 @@ export default function ResultsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
-      <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20" />
-        <div className="relative max-w-7xl mx-auto px-4 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-              Championship Results
-            </h1>
-            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-              Tracking excellence across all university sports and tournaments
-            </p>
-          </div>
+      {/* Header */}
+      <div className="relative overflow-hidden bg-gray-900 min-h-[500px] flex items-center justify-center">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000&auto=format&fit=crop"
+            alt="Cricket Stadium"
+            className="h-full w-full object-cover object-center opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/20" />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-6xl font-black text-white mb-6 drop-shadow-lg">
+            Championship Results
+          </h1>
+          <p className="text-xl text-gray-200 max-w-2xl mx-auto font-medium drop-shadow">
+            Tracking excellence across all university sports and tournaments
+          </p>
         </div>
       </div>
 

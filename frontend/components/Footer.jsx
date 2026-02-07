@@ -10,9 +10,16 @@ export default function Footer() {
           {/* University Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center">
-                <span className="text-white font-bold text-lg">UoV</span>
-              </div>
+
+              <img
+                src="/images/logo.png"
+                alt="UoV Sports Logo"
+                width={50}
+                height={50}
+                className="rounded-full border border-blue-500 bg-white p-1"
+                style={{ width: '50px', height: '50px' }}
+              />
+
               <div>
                 <h3 className="text-2xl font-bold text-white">
                   UoV Sports Portal
@@ -246,6 +253,6 @@ export default function Footer() {
           </p>
         </div>
       </div>
-    </footer>
+    </footer >
   );
 }

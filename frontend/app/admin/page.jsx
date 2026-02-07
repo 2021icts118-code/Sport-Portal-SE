@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import {
     Users,
     Trophy,
-    Settings,
     Check,
     X,
     Shield,
@@ -26,7 +25,9 @@ import {
     BarChart3,
     Award,
     Calendar,
-    Image as ImageIcon
+    Image as ImageIcon,
+    Trash2,
+    Pencil
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -310,7 +311,7 @@ export default function AdminDashboard() {
                         { id: "training", label: "Training Programs", icon: <Activity size={20} />, active: activeTab === "training" },
                         { id: "gallery", label: "Gallery", icon: <ImageIcon size={20} />, active: activeTab === "gallery" },
                         { id: "sports", label: "Sports Configuration", icon: <Activity size={20} />, active: activeTab === "sports" },
-                        { id: "settings", label: "Portal Config", icon: <Settings size={20} />, active: activeTab === "settings" },
+
                     ].map((item) => (
                         <button
                             key={item.id}
@@ -461,7 +462,7 @@ export default function AdminDashboard() {
 
                             {/* Centerpieces */}
                             <div className="grid lg:grid-cols-3 gap-8">
-                                <div className="lg:col-span-2 bg-white rounded-[32px] border border-slate-200 shadow-sm p-8 overflow-hidden relative">
+                                <div className="lg:col-span-3 bg-white rounded-[32px] border border-slate-200 shadow-sm p-8 overflow-hidden relative">
                                     <div className="flex items-center justify-between mb-8">
                                         <div>
                                             <h3 className="text-xl font-black text-slate-900 leading-none">System Activity</h3>
@@ -472,37 +473,32 @@ export default function AdminDashboard() {
                                             <option>Last 30 Days</option>
                                         </select>
                                     </div>
-                                    <div className="h-64 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex items-center justify-center group">
-                                        <div className="text-center group-hover:scale-105 transition-transform duration-500">
-                                            <BarChart3 size={48} className="text-slate-200 mx-auto mb-4" />
-                                            <p className="text-slate-400 text-sm font-medium tracking-wide">Metric Visualization Placeholder</p>
-                                            <p className="text-[10px] text-slate-300 font-bold uppercase mt-2">Charts initialized</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-gradient-to-br from-blue-600 to-indigo-800 rounded-[32px] shadow-2xl shadow-blue-200 p-8 text-white relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:scale-110 transition-transform duration-700">
-                                        <Shield size={160} />
-                                    </div>
-                                    <div className="relative z-10 h-full flex flex-col">
-                                        <div className="h-12 w-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-6">
-                                            <Shield size={24} />
-                                        </div>
-                                        <h3 className="text-2xl font-black leading-tight mb-2">Security &<br />Integrity Control</h3>
-                                        <p className="text-blue-100 text-sm font-medium mb-auto">Your portal is currently operating under standard protocol. No threats detected.</p>
-
-                                        <div className="mt-8 space-y-4">
-                                            <div className="flex items-center justify-between p-3 bg-white/10 rounded-2xl border border-white/10">
-                                                <span className="text-xs font-bold uppercase">System Uptime</span>
-                                                <span className="text-xs font-black text-emerald-300">99.99%</span>
+                                    <div className="h-64 bg-slate-50 rounded-2xl border border-dashed border-slate-200 flex items-end justify-center p-8 gap-8 group">
+                                        {[
+                                            { label: 'Users', value: users.length, color: 'bg-blue-500', height: `${Math.min(users.length * 10 || 10, 100)}%` },
+                                            { label: 'Clubs', value: clubs.length, color: 'bg-emerald-500', height: `${Math.min(clubs.length * 20 || 10, 100)}%` },
+                                            { label: 'Tournaments', value: tournaments.length, color: 'bg-amber-500', height: `${Math.min(tournaments.length * 20 || 10, 100)}%` },
+                                            { label: 'Results', value: results.length, color: 'bg-purple-500', height: `${Math.min(results.length * 20 || 10, 100)}%` }
+                                        ].map((item, i) => (
+                                            <div key={i} className="flex flex-col items-center gap-2 h-full justify-end group/bar">
+                                                <div className="relative w-16 bg-slate-200 rounded-t-xl overflow-hidden h-full flex items-end">
+                                                    <motion.div
+                                                        initial={{ height: 0 }}
+                                                        animate={{ height: item.height }}
+                                                        className={`w-full ${item.color} opacity-80 group-hover/bar:opacity-100 transition-all duration-500 rounded-t-xl relative`}
+                                                    >
+                                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded-lg opacity-0 group-hover/bar:opacity-100 transition-opacity">
+                                                            {item.value}
+                                                        </div>
+                                                    </motion.div>
+                                                </div>
+                                                <span className="text-[10px] font-black uppercase text-slate-400">{item.label}</span>
                                             </div>
-                                            <button className="w-full py-4 bg-white text-blue-700 font-black rounded-2xl shadow-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2">
-                                                Audit Logs <ArrowRight size={18} />
-                                            </button>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
+
+
                             </div>
                         </div>
                     )}
@@ -518,7 +514,10 @@ export default function AdminDashboard() {
                                     {activeTab === "requests" && <><UserPlus size={18} className="text-amber-600" /> Pending Approvals</>}
                                 </h3>
                                 {activeTab === "clubs" && (
-                                    <button className="px-4 py-2 bg-blue-600 text-white text-[10px] font-black rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-100 flex items-center gap-2 uppercase tracking-widest transition-all">
+                                    <button
+                                        onClick={() => setModalData({ type: 'clubs', data: {} })}
+                                        className="px-4 py-2 bg-blue-600 text-white text-[10px] font-black rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-100 flex items-center gap-2 uppercase tracking-widest transition-all"
+                                    >
                                         <Plus size={14} /> New Club
                                     </button>
                                 )}
@@ -577,9 +576,22 @@ export default function AdminDashboard() {
                                                     </td>
                                                     <td className="px-8 py-5 text-xs text-slate-500 font-bold uppercase tracking-tight">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
                                                     <td className="px-8 py-5 text-right">
-                                                        <button className="p-2 text-slate-400 hover:text-blue-600 hover:bg-white rounded-xl transition-all shadow-sm">
-                                                            <MoreVertical size={16} />
-                                                        </button>
+                                                        <div className="flex items-center justify-end gap-2">
+                                                            <button
+                                                                onClick={() => setModalData({ type: 'users', data: user, edit: true })}
+                                                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-blue-100"
+                                                                title="Edit User"
+                                                            >
+                                                                <Pencil size={16} />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDelete('admin/users', user._id, setUsers)}
+                                                                className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all shadow-sm"
+                                                                title="Delete User"
+                                                            >
+                                                                <Trash2 size={16} />
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -610,10 +622,16 @@ export default function AdminDashboard() {
                                                     <span>{club.memberCount || 0} Members</span>
                                                 </div>
                                                 <div className="mt-auto grid grid-cols-2 gap-3">
-                                                    <button className="py-3 bg-slate-50 hover:bg-slate-100 text-slate-800 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all border border-slate-200">
-                                                        Details
+                                                    <button
+                                                        onClick={() => handleDelete('clubs', club._id, setClubs)}
+                                                        className="py-3 bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all border border-red-200"
+                                                    >
+                                                        Delete
                                                     </button>
-                                                    <button className="py-3 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-blue-100">
+                                                    <button
+                                                        onClick={() => setModalData({ type: 'clubs', data: club, edit: true })}
+                                                        className="py-3 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-blue-100"
+                                                    >
                                                         Manage
                                                     </button>
                                                 </div>
@@ -623,7 +641,7 @@ export default function AdminDashboard() {
                                 )}
 
                                 {activeTab === "requests" && (
-                                    <div className="p-8 bg-slate-50/30">
+                                    <div className="bg-white">
                                         {pendingRequests.length === 0 ? (
                                             <div className="text-center py-20">
                                                 <div className="h-20 w-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -633,46 +651,59 @@ export default function AdminDashboard() {
                                                 <p className="text-slate-400 font-medium">No pending membership applications found.</p>
                                             </div>
                                         ) : (
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                {pendingRequests.map(request => (
-                                                    <div key={request.id} className="bg-white p-6 rounded-[32px] border border-slate-200 shadow-sm hover:shadow-md transition-all group relative overflow-hidden">
-                                                        <div className="absolute top-0 right-0 h-1.5 w-full bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                        <div className="flex items-start justify-between">
-                                                            <div className="flex gap-5">
-                                                                <div className="h-16 w-16 rounded-3xl bg-amber-50 flex items-center justify-center text-amber-600 border border-amber-100">
-                                                                    <UserPlus size={28} />
-                                                                </div>
-                                                                <div className="pt-1">
-                                                                    <h3 className="text-lg font-black text-slate-900 leading-none mb-1">{request.userName}</h3>
-                                                                    <p className="text-xs text-slate-400 font-bold tracking-tight mb-4">{request.userEmail}</p>
-                                                                    <div className="flex items-center gap-2">
-                                                                        <div className="flex -space-x-2">
-                                                                            <div className="h-6 w-6 rounded-full bg-slate-200 border-2 border-white" />
-                                                                            <div className="h-6 w-6 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-[8px] font-bold text-blue-600">J</div>
-                                                                        </div>
-                                                                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Wants to join</span>
-                                                                        <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">{request.clubName}</span>
+                                            <table className="w-full text-left border-collapse">
+                                                <thead>
+                                                    <tr className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50/50">
+                                                        <th className="px-8 py-5">Applicant</th>
+                                                        <th className="px-8 py-5">Target Club</th>
+                                                        <th className="px-8 py-5">Request Date</th>
+                                                        <th className="px-8 py-5 text-right">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-100">
+                                                    {pendingRequests.map(request => (
+                                                        <tr key={request.id} className="hover:bg-blue-50/30 transition-all group">
+                                                            <td className="px-8 py-5">
+                                                                <div className="flex items-center gap-4">
+                                                                    <div className="h-10 w-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 border border-amber-100">
+                                                                        <UserPlus size={18} />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="text-sm font-black text-slate-900">{request.userName}</p>
+                                                                        <p className="text-xs text-slate-400 font-medium">{request.userEmail}</p>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div className="flex flex-col gap-2">
-                                                                <button
-                                                                    onClick={() => handleApprove(request.id, request.clubId, request.userId)}
-                                                                    className="p-3 bg-emerald-600 text-white rounded-2xl shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all"
-                                                                >
-                                                                    <Check size={20} />
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => handleReject(request.id, request.clubId, request.userId)}
-                                                                    className="p-3 bg-slate-100 text-slate-400 rounded-2xl hover:bg-red-50 hover:text-red-600 transition-all border border-slate-200"
-                                                                >
-                                                                    <X size={20} />
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
+                                                            </td>
+                                                            <td className="px-8 py-5">
+                                                                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg border border-blue-100">
+                                                                    {request.clubName}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-8 py-5 text-xs text-slate-500 font-bold uppercase tracking-tight">
+                                                                {request.date}
+                                                            </td>
+                                                            <td className="px-8 py-5 text-right">
+                                                                <div className="flex items-center justify-end gap-2">
+                                                                    <button
+                                                                        onClick={() => handleApprove(request.id, request.clubId, request.userId)}
+                                                                        className="p-2 bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all"
+                                                                        title="Approve"
+                                                                    >
+                                                                        <Check size={16} />
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => handleReject(request.id, request.clubId, request.userId)}
+                                                                        className="p-2 bg-white text-slate-400 border border-slate-200 rounded-xl hover:bg-red-50 hover:text-red-600 transition-all shadow-sm"
+                                                                        title="Reject"
+                                                                    >
+                                                                        <X size={16} />
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
                                         )}
                                     </div>
                                 )}
@@ -702,10 +733,10 @@ export default function AdminDashboard() {
                                     <tbody className="divide-y divide-slate-100">
                                         {tournaments.map(t => (
                                             <tr key={t._id} className="hover:bg-blue-50/30 transition-all group">
-                                                <td className="px-8 py-5 text-sm font-black text-slate-900">{t.name}</td>
+                                                <td className="px-8 py-5 text-sm font-black text-slate-900">{t.title}</td>
                                                 <td className="px-8 py-5 text-xs font-bold text-slate-500">{t.sport?.name || 'All'}</td>
                                                 <td className="px-8 py-5 text-xs text-slate-500 font-bold uppercase tracking-tight">
-                                                    {new Date(t.startDate).toLocaleDateString()} - {new Date(t.endDate).toLocaleDateString()}
+                                                    {new Date(t.date).toLocaleDateString()}
                                                 </td>
                                                 <td className="px-8 py-5">
                                                     <span className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest ${t.status === 'upcoming' ? 'bg-blue-50 text-blue-700' : 'bg-green-50 text-green-700'}`}>
@@ -714,8 +745,20 @@ export default function AdminDashboard() {
                                                 </td>
                                                 <td className="px-8 py-5 text-right">
                                                     <div className="flex items-center justify-end gap-2">
-                                                        <button onClick={() => setModalData({ type: 'tournaments', data: t, edit: true })} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">Edit</button>
-                                                        <button onClick={() => handleDelete('tournaments', t._id, setTournaments)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">Delete</button>
+                                                        <button
+                                                            onClick={() => setModalData({ type: 'tournaments', data: t, edit: true })}
+                                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-blue-100"
+                                                            title="Edit"
+                                                        >
+                                                            <Pencil size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete('tournaments', t._id, setTournaments)}
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-red-100"
+                                                            title="Delete"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -762,8 +805,20 @@ export default function AdminDashboard() {
                                                 <td className="px-8 py-5 text-xs text-slate-500">{s.location}</td>
                                                 <td className="px-8 py-5 text-right">
                                                     <div className="flex items-center justify-end gap-2">
-                                                        <button onClick={() => setModalData({ type: 'schedules', data: s, edit: true })} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">Edit</button>
-                                                        <button onClick={() => handleDelete('schedules', s._id, setSchedules)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">Delete</button>
+                                                        <button
+                                                            onClick={() => setModalData({ type: 'schedules', data: s, edit: true })}
+                                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-blue-100"
+                                                            title="Edit"
+                                                        >
+                                                            <Pencil size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete('schedules', s._id, setSchedules)}
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-red-100"
+                                                            title="Delete"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -817,8 +872,20 @@ export default function AdminDashboard() {
                                                 </td>
                                                 <td className="px-8 py-5 text-right">
                                                     <div className="flex items-center justify-end gap-2">
-                                                        <button onClick={() => setModalData({ type: 'results', data: r, edit: true })} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">Edit</button>
-                                                        <button onClick={() => handleDelete('results', r._id, setResults)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">Delete</button>
+                                                        <button
+                                                            onClick={() => setModalData({ type: 'results', data: r, edit: true })}
+                                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-blue-100"
+                                                            title="Edit"
+                                                        >
+                                                            <Pencil size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete('results', r._id, setResults)}
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-red-100"
+                                                            title="Delete"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -874,8 +941,20 @@ export default function AdminDashboard() {
                                                 </td>
                                                 <td className="px-8 py-5 text-right">
                                                     <div className="flex items-center justify-end gap-2">
-                                                        <button onClick={() => setModalData({ type: 'training-programs', data: p, edit: true })} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">Edit</button>
-                                                        <button onClick={() => handleDelete('training-programs', p._id, setTrainingPrograms)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">Delete</button>
+                                                        <button
+                                                            onClick={() => setModalData({ type: 'training-programs', data: p, edit: true })}
+                                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-blue-100"
+                                                            title="Edit"
+                                                        >
+                                                            <Pencil size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete('training-programs', p._id, setTrainingPrograms)}
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-red-100"
+                                                            title="Delete"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -953,8 +1032,20 @@ export default function AdminDashboard() {
                                                 <td className="px-8 py-5 text-sm font-black text-slate-900">{s.players}</td>
                                                 <td className="px-8 py-5 text-right">
                                                     <div className="flex items-center justify-end gap-2">
-                                                        <button onClick={() => setModalData({ type: 'sports', data: s, edit: true })} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">Edit</button>
-                                                        <button onClick={() => handleDelete('sports', s._id, setSports)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">Delete</button>
+                                                        <button
+                                                            onClick={() => setModalData({ type: 'sports', data: s, edit: true })}
+                                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-blue-100"
+                                                            title="Edit"
+                                                        >
+                                                            <Pencil size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete('sports', s._id, setSports)}
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors shadow-sm border border-transparent hover:border-red-100"
+                                                            title="Delete"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -965,60 +1056,7 @@ export default function AdminDashboard() {
                         </div>
                     )}
 
-                    {/* Settings Section */}
-                    {activeTab === "settings" && (
-                        <div className="grid lg:grid-cols-2 gap-8 animate-in fade-in slide-in-from-right-8 duration-500">
-                            <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm p-10">
-                                <h3 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-3">
-                                    <Shield size={24} className="text-blue-600" /> Administrative Logic
-                                </h3>
 
-                                <div className="space-y-8">
-                                    {[
-                                        { title: "Public Onboarding", desc: "Allow new student registrations", enabled: true },
-                                        { title: "Auto-Approval", desc: "Skip manual approval for certified athletes", enabled: false },
-                                        { title: "Broadcast Mode", desc: "Synchronize notifications across all clubs", enabled: true }
-                                    ].map((opt, i) => (
-                                        <div key={i} className="flex items-center justify-between group">
-                                            <div>
-                                                <p className="font-black text-slate-800 text-sm mb-0.5">{opt.title}</p>
-                                                <p className="text-xs text-slate-400 font-medium">{opt.desc}</p>
-                                            </div>
-                                            <div className={`h-6 w-12 rounded-full relative cursor-pointer transition-all duration-300 ${opt.enabled ? 'bg-blue-600' : 'bg-slate-200'}`}>
-                                                <div className={`absolute top-1 h-4 w-4 bg-white rounded-full transition-all shadow-sm ${opt.enabled ? 'left-7' : 'left-1'}`} />
-                                            </div>
-                                        </div>
-                                    ))}
-
-                                    <div className="pt-8 border-t border-slate-100">
-                                        <button className="w-full py-4 bg-slate-900 text-white font-black rounded-2xl shadow-xl hover:bg-slate-800 shadow-slate-200 transition-all uppercase tracking-widest text-xs">
-                                            Synchronize Global Config
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="space-y-8">
-                                <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm p-10">
-                                    <h3 className="text-xl font-black text-slate-900 mb-6 font-blue-600">Portal Health</h3>
-                                    <div className="space-y-6">
-                                        <div className="p-5 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center justify-between">
-                                            <div className="flex items-center gap-4">
-                                                <div className="h-10 w-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white">
-                                                    <Activity size={20} />
-                                                </div>
-                                                <span className="font-black text-emerald-800 text-sm">Server Latency</span>
-                                            </div>
-                                            <span className="text-sm font-black text-emerald-600 tracking-tight">32ms</span>
-                                        </div>
-                                        <div className="p-5 bg-blue-50 rounded-2xl border border-blue-100 flex items-center justify-center border-dashed group cursor-pointer hover:bg-blue-100/50 transition-colors">
-                                            <span className="text-blue-600 font-black text-xs uppercase tracking-widest">Execute Full System Diagnosis</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </main>
 
@@ -1062,24 +1100,49 @@ export default function AdminDashboard() {
                                 if (endpoint === 'sports') setter = setSports;
                                 if (endpoint === 'clubs') setter = setClubs;
                                 if (endpoint === 'training-programs') setter = setTrainingPrograms;
+                                if (endpoint === 'users') {
+                                    endpoint = 'admin/users';
+                                    setter = setUsers;
+                                }
 
                                 handleSave(endpoint, { ...modalData.data, ...data }, setter, !!modalData.edit);
                             }} className="p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                                {modalData.type === 'users' && (
+                                    <>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">First Name</label>
+                                                <input name="firstName" defaultValue={modalData.data.firstName} required placeholder="e.g. Kamal" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">Last Name</label>
+                                                <input name="lastName" defaultValue={modalData.data.lastName} required placeholder="e.g. Perera" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Email Address</label>
+                                            <input name="email" type="email" defaultValue={modalData.data.email} required placeholder="e.g. kamal@uov.ac.lk" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Role</label>
+                                            <select name="role" defaultValue={modalData.data.role || 'student'} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                                                <option value="student">Student</option>
+                                                <option value="admin">Admin</option>
+                                                <option value="coach">Coach</option>
+                                            </select>
+                                        </div>
+                                    </>
+                                )}
+
                                 {modalData.type === 'tournaments' && (
                                     <>
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase text-slate-400">Tournament Name</label>
-                                            <input name="name" defaultValue={modalData.data.name} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Tournament Title</label>
+                                            <input name="title" defaultValue={modalData.data.title} required placeholder="e.g. UOV Inter-Faculty Cricket / වවුනියා විශ්ව විද්‍යාලයීය ක්‍රිකට්" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
                                         </div>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase text-slate-400">Start Date</label>
-                                                <input type="date" name="startDate" defaultValue={modalData.data.startDate?.split('T')[0]} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase text-slate-400">End Date</label>
-                                                <input type="date" name="endDate" defaultValue={modalData.data.endDate?.split('T')[0]} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
-                                            </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Date</label>
+                                            <input type="date" name="date" defaultValue={modalData.data.date?.split('T')[0]} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Status</label>
@@ -1096,7 +1159,7 @@ export default function AdminDashboard() {
                                     <>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Event Title</label>
-                                            <input name="title" defaultValue={modalData.data.title} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
+                                            <input name="title" defaultValue={modalData.data.title} required placeholder="e.g. Finals - Science vs Tech / අවසන් මහා තරඟය" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="space-y-2">
@@ -1130,7 +1193,7 @@ export default function AdminDashboard() {
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Location</label>
-                                            <input name="location" defaultValue={modalData.data.location} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                            <input name="location" defaultValue={modalData.data.location} placeholder="e.g. University Ground / විශ්ව විද්‍යාල ක්‍රීඩාංගණය" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
                                         </div>
                                     </>
                                 )}
@@ -1139,11 +1202,11 @@ export default function AdminDashboard() {
                                     <>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Winner Name</label>
-                                            <input name="winnerName" defaultValue={modalData.data.winnerName} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
+                                            <input name="winnerName" defaultValue={modalData.data.winnerName} placeholder="e.g. Faculty of Science / විද්‍යා පීඨය" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Runner Up Name</label>
-                                            <input name="runnerUpName" defaultValue={modalData.data.runnerUpName} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
+                                            <input name="runnerUpName" defaultValue={modalData.data.runnerUpName} placeholder="e.g. Faculty of Technology / තාක්ෂණ පීඨය" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Score (Text)</label>
@@ -1174,7 +1237,7 @@ export default function AdminDashboard() {
                                     <>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Sport Name</label>
-                                            <input name="name" defaultValue={modalData.data.name} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                            <input name="name" defaultValue={modalData.data.name} required placeholder="e.g. Cricket / ක්‍රිකට්" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Category</label>
@@ -1190,7 +1253,46 @@ export default function AdminDashboard() {
                                     <>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Club Name</label>
-                                            <input name="name" defaultValue={modalData.data.name} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                            <input name="name" defaultValue={modalData.data.name} required placeholder="e.g. UOV Elle Club / වවුනියා විශ්ව විද්‍යාලයීය එල්ලේ සංගමය" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Description</label>
+                                            <textarea name="description" defaultValue={modalData.data.description} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm h-24" />
+                                        </div>
+                                    </>
+                                )}
+
+                                {modalData.type === 'training-programs' && (
+                                    <>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Program Name</label>
+                                            <input name="name" defaultValue={modalData.data.name} required placeholder="e.g. Beginner Swimming / පිහිනුම් පුහුණුව" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">Sport</label>
+                                                <select name="sport" defaultValue={modalData.data.sport?._id || modalData.data.sport} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                                                    <option value="">Select Sport</option>
+                                                    {sports.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">Level</label>
+                                                <select name="level" defaultValue={modalData.data.level || 'Beginner'} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                                                    <option value="Beginner">Beginner</option>
+                                                    <option value="Intermediate">Intermediate</option>
+                                                    <option value="Advanced">Advanced</option>
+                                                    <option value="Elite">Elite</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Duration</label>
+                                            <input name="duration" defaultValue={modalData.data.duration} placeholder="e.g. 12 weeks / සති 12" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Schedule Time</label>
+                                            <input name="schedule.time" defaultValue={modalData.data.schedule?.time} placeholder="e.g. Mon 4PM / සඳුදා සවස 4" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Description</label>
@@ -1221,12 +1323,45 @@ export default function AdminDashboard() {
                                     </>
                                 )}
 
-                                <div className="pt-6 flex gap-3">
-                                    <button type="button" onClick={() => setModalData(null)} className="flex-1 py-4 bg-slate-100 text-slate-600 font-black rounded-2xl hover:bg-slate-200 transition-all uppercase tracking-widest text-[10px]">Cancel</button>
-                                    <button type="submit" className="flex-2 py-4 bg-blue-600 text-white font-black rounded-2xl shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all uppercase tracking-widest text-[10px] px-12">
-                                        Save Changes
-                                    </button>
-                                </div>
+                                {modalData.type === 'audit-logs' && (
+                                    <div className="space-y-4">
+                                        {(!modalData.data || modalData.data.length === 0) ? (
+                                            <p className="text-center text-slate-400 text-sm font-bold p-8">No logs found.</p>
+                                        ) : (
+                                            <div className="space-y-2">
+                                                {modalData.data.map((log, i) => (
+                                                    <div key={i} className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col gap-2">
+                                                        <div className="flex justify-between items-start">
+                                                            <span className="text-[10px] font-black uppercase text-blue-600 bg-blue-50 px-2 py-1 rounded-lg border border-blue-100">{log.action}</span>
+                                                            <span className="text-[10px] text-slate-400 font-bold">{new Date(log.createdAt).toLocaleString()}</span>
+                                                        </div>
+                                                        <p className="text-xs font-bold text-slate-700">{log.target}</p>
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="h-5 w-5 rounded-full bg-slate-200 flex items-center justify-center text-[8px] font-black text-slate-500">
+                                                                {(log.admin?.firstName || 'A')[0]}
+                                                            </div>
+                                                            <span className="text-[10px] text-slate-500 font-bold">{log.admin?.firstName} {log.admin?.lastName}</span>
+                                                        </div>
+                                                        {log.details && (
+                                                            <pre className="text-[10px] text-slate-400 bg-white p-2 rounded-lg border border-slate-100 overflow-x-auto">
+                                                                {JSON.stringify(log.details, null, 2)}
+                                                            </pre>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {modalData.type !== 'audit-logs' && (
+                                    <div className="pt-6 flex gap-3">
+                                        <button type="button" onClick={() => setModalData(null)} className="flex-1 py-4 bg-slate-100 text-slate-600 font-black rounded-2xl hover:bg-slate-200 transition-all uppercase tracking-widest text-[10px]">Cancel</button>
+                                        <button type="submit" className="flex-2 py-4 bg-blue-600 text-white font-black rounded-2xl shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all uppercase tracking-widest text-[10px] px-12">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                )}
                             </form>
                         </motion.div>
                     </div>

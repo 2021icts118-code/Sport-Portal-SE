@@ -11,11 +11,7 @@ import {
   Target,
   Sparkles,
   TrendingUp,
-  BarChart3,
-  Clock,
-  Bell,
-  ShieldCheck,
-  Zap,
+
   Home,
   CalendarDays,
   PlayCircle,
@@ -159,13 +155,7 @@ export default function Hero() {
     }
   };
 
-  // Quick action buttons
-  const quickActions = [
-    { icon: <Bell className="h-4 w-4" />, label: "Tournaments", action: "/tournaments" },
-    { icon: <BarChart3 className="h-4 w-4" />, label: "Results", action: "/results" },
-    { icon: <Clock className="h-4 w-4" />, label: "Schedule", action: "/schedule" },
-    { icon: <ShieldCheck className="h-4 w-4" />, label: "Clubs", action: "/clubs" }
-  ];
+
 
   return (
     <section className="relative min-h-screen w-full overflow-hidden">
@@ -492,46 +482,7 @@ export default function Hero() {
         </motion.button>
       </div>
 
-      {/* Quick Actions Panel - Professional Sidebar */}
-      <motion.div
-        initial={{ x: 100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ delay: 1.7 }}
-        className="hidden xl:block fixed right-8 top-1/2 -translate-y-1/2 z-20"
-      >
-        <div className="bg-gray-900/90 backdrop-blur-lg rounded-2xl p-5 border border-gray-700/50 shadow-2xl">
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-700/50">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500">
-                <Zap className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-white">Quick Access</h3>
-                <p className="text-xs text-gray-400">University Sports</p>
-              </div>
-            </div>
-            {quickActions.map((action, idx) => (
-              <motion.div
-                key={idx}
-                whileHover={{ scale: 1.03, x: -3 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                <Link
-                  href={action.action}
-                  className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-gray-800/50 hover:bg-gray-700/50 hover:border-blue-500/30 border border-gray-700/50 transition-all group"
-                >
-                  <div className="text-gray-400 group-hover:text-blue-400">
-                    {action.icon}
-                  </div>
-                  <span className="text-sm font-medium text-gray-300 group-hover:text-white">
-                    {action.label}
-                  </span>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
+
 
       {/* Bottom gradient fade */}
       <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent pointer-events-none" />
