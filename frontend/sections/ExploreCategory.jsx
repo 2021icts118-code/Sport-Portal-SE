@@ -15,7 +15,7 @@ import {
   TrendingUp,
   Award,
   Loader2,
-  X // Import X for close button if needed, though likely unused here as it's in the modal
+  X 
 } from "lucide-react";
 import SportDetailsModal from "../components/SportDetailsModal";
 import { motion, useInView } from "framer-motion";
@@ -35,7 +35,7 @@ const getIcon = (iconName) => {
     Clock,
     Award
   };
-  return icons[iconName] || Trophy; // Default fallback
+  return icons[iconName] || Trophy; 
 };
 
 export default function ExploreCategory() {

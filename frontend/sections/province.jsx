@@ -17,7 +17,7 @@ const UoVSportsPortal = () => {
   const [viewingSportName, setViewingSportName] = useState(null);
   const router = useRouter();
 
-  // Set isClient and mounted only on the client side
+  
   useEffect(() => {
     setIsClient(true);
     setMounted(true);
@@ -46,7 +46,7 @@ const UoVSportsPortal = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching sports data:", err);
-        // Set fallback data with elle and netball included
+        
         setSportsData([
           {
             id: 1,
@@ -265,13 +265,32 @@ const UoVSportsPortal = () => {
     { icon: <Star className="h-5 w-5" />, value: "4.7★", label: "Avg. Rating", color: "text-rose-500" }
   ];
 
-  // Don't render until client-side to prevent hydration mismatch
+  
   if (!mounted || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 p-4 md:p-6 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-16 w-16 text-blue-500 animate-spin mx-auto mb-4" />
           <p className="text-lg text-gray-600">Loading UoV Sports Portal...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle empty data state
+  if (!sportsData || sportsData.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
+          <Trophy className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-gray-900 mb-2">No Sports Data Available</h3>
+          <p className="text-gray-500">Unable to load sports categories at this time.</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Refresh Page
+          </button>
         </div>
       </div>
     );

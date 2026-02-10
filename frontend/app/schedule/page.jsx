@@ -307,76 +307,76 @@ export default function SchedulePage() {
       {/* Modern Event Details Modal */}
       {showModal && selectedEvent && (
         <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-[40px] max-w-2xl w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
+          <div className="bg-white rounded-[32px] max-w-lg w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
             <div className="absolute top-0 left-0 right-0 h-2 bg-blue-600" />
 
-            <div className="p-10">
-              <div className="flex items-center justify-between mb-10">
-                <div className="flex items-center gap-3">
-                  <div className={`px-5 py-2 rounded-2xl text-xs font-black uppercase tracking-widest border ${getEventTypeStyle(selectedEvent.eventType)}`}>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                  <div className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border ${getEventTypeStyle(selectedEvent.eventType)}`}>
                     {selectedEvent.eventType}
                   </div>
                   <Link
                     href={`/sports?sport=${encodeURIComponent(selectedEvent.sport?.name)}`}
-                    className="px-4 py-1.5 bg-blue-50 text-blue-700 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-100 hover:bg-blue-600 hover:text-white transition-all"
+                    className="px-3 py-1.5 bg-blue-50 text-blue-700 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-100 hover:bg-blue-600 hover:text-white transition-all"
                   >
                     {selectedEvent.sport?.name}
                   </Link>
                 </div>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="p-3 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-900 rounded-2xl transition-all"
+                  className="p-2 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-900 rounded-xl transition-all"
                 >
-                  <X size={24} />
+                  <X size={20} />
                 </button>
               </div>
 
-              <h2 className="text-4xl font-black text-slate-900 tracking-tight leading-tight mb-8">
+              <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-tight mb-6">
                 {selectedEvent.title}
               </h2>
 
-              <div className="grid grid-cols-2 gap-4 mb-10">
-                <div className="bg-slate-50 p-6 rounded-[32px] border border-slate-100">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Meeting Time</p>
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-blue-600">
-                      <Clock size={20} />
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Meeting Time</p>
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 bg-white rounded-lg shadow-sm flex items-center justify-center text-blue-600">
+                      <Clock size={16} />
                     </div>
-                    <span className="text-sm font-black text-slate-900">{selectedEvent.startTime} {selectedEvent.endTime ? `- ${selectedEvent.endTime}` : ''}</span>
+                    <span className="text-xs font-black text-slate-900">{selectedEvent.startTime} {selectedEvent.endTime ? `- ${selectedEvent.endTime}` : ''}</span>
                   </div>
                 </div>
-                <div className="bg-slate-50 p-6 rounded-[32px] border border-slate-100">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Event Date</p>
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-blue-600">
-                      <Calendar size={20} />
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Event Date</p>
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 bg-white rounded-lg shadow-sm flex items-center justify-center text-blue-600">
+                      <Calendar size={16} />
                     </div>
-                    <span className="text-sm font-black text-slate-900">{new Date(selectedEvent.date).toLocaleDateString()}</span>
+                    <span className="text-xs font-black text-slate-900">{new Date(selectedEvent.date).toLocaleDateString()}</span>
                   </div>
                 </div>
-                <div className="col-span-2 bg-slate-50 p-6 rounded-[32px] border border-slate-100">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Location & Participating Club</p>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-blue-600">
-                        <MapPin size={20} />
+                <div className="col-span-2 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Location & Participating Club</p>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 bg-white rounded-lg shadow-sm flex items-center justify-center text-blue-600">
+                        <MapPin size={16} />
                       </div>
-                      <span className="text-sm font-black text-slate-900">{selectedEvent.location}</span>
+                      <span className="text-xs font-black text-slate-900">{selectedEvent.location}</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-blue-600">
-                        <Users size={20} />
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 bg-white rounded-lg shadow-sm flex items-center justify-center text-blue-600">
+                        <Users size={16} />
                       </div>
-                      <span className="text-sm font-black text-slate-900">{selectedEvent.club?.name || 'Open to All Athletes'}</span>
+                      <span className="text-xs font-black text-slate-900">{selectedEvent.club?.name || 'Open to All Athletes'}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mb-10">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Event Description</p>
-                <div className="bg-blue-50/50 p-8 rounded-[32px] border border-blue-100/50">
-                  <p className="text-slate-700 font-medium leading-relaxed italic">
+              <div className="mb-6">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Event Description</p>
+                <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100/50">
+                  <p className="text-slate-700 text-sm font-medium leading-relaxed italic">
                     "{selectedEvent.description || "This event is part of the regular university sports program. Attendees are expected to arrive 15 minutes prior to the start time."}"
                   </p>
                 </div>
@@ -384,13 +384,8 @@ export default function SchedulePage() {
 
               <div className="flex gap-4">
                 <button
-                  className="flex-1 py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-blue-200"
-                >
-                  Set Schedule Alert
-                </button>
-                <button
                   onClick={() => setShowModal(false)}
-                  className="px-10 py-5 bg-white hover:bg-slate-50 text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all border border-slate-200"
+                  className="w-full py-4 bg-white hover:bg-slate-50 text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all border border-slate-200"
                 >
                   Close
                 </button>
