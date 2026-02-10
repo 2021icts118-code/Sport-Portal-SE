@@ -184,7 +184,7 @@ export default function SchedulePage() {
                         {event.eventType}
                       </div>
                       <Link
-                        href={`/sports/${encodeURIComponent(event.sport?.name)}`}
+                        href={`/sports?sport=${encodeURIComponent(event.sport?.name)}`}
                         className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline"
                       >
                         {event.sport?.name}
@@ -259,7 +259,7 @@ export default function SchedulePage() {
                               <Trophy size={14} />
                             </div>
                             <Link
-                              href={`/sports/${encodeURIComponent(event.sport?.name)}`}
+                              href={`/sports?sport=${encodeURIComponent(event.sport?.name)}`}
                               className="text-xs font-black text-slate-700 uppercase tracking-tighter hover:text-blue-600"
                             >
                               {event.sport?.name}
@@ -317,7 +317,7 @@ export default function SchedulePage() {
                     {selectedEvent.eventType}
                   </div>
                   <Link
-                    href={`/sports/${encodeURIComponent(selectedEvent.sport?.name)}`}
+                    href={`/sports?sport=${encodeURIComponent(selectedEvent.sport?.name)}`}
                     className="px-4 py-1.5 bg-blue-50 text-blue-700 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-100 hover:bg-blue-600 hover:text-white transition-all"
                   >
                     {selectedEvent.sport?.name}

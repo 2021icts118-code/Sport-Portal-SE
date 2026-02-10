@@ -14,8 +14,10 @@ import {
   Shield,
   TrendingUp,
   Award,
-  Loader2
+  Loader2,
+  X // Import X for close button if needed, though likely unused here as it's in the modal
 } from "lucide-react";
+import SportDetailsModal from "../components/SportDetailsModal";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 
@@ -40,6 +42,7 @@ export default function ExploreCategory() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [selectedSport, setSelectedSport] = useState(null);
   const [categories, setCategories] = useState([]);
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -270,13 +273,13 @@ export default function ExploreCategory() {
                       {/* Tags */}
                       <div className="flex flex-wrap gap-2 mb-5">
                         {cat.tags.map((t, idx) => (
-                          <Link
+                          <button
                             key={idx}
-                            href={`/sports/${encodeURIComponent(t)}`}
+                            onClick={() => setSelectedSport(t)}
                             className="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-colors"
                           >
                             {t}
-                          </Link>
+                          </button>
                         ))}
                       </div>
 
@@ -365,6 +368,12 @@ export default function ExploreCategory() {
           </>
         )}
       </div>
+      {selectedSport && (
+        <SportDetailsModal
+          sportName={selectedSport}
+          onClose={() => setSelectedSport(null)}
+        />
+      )}
     </section>
   );
 }

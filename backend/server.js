@@ -11,7 +11,11 @@ const PORT = process.env.PORT || 4000;
 connectDB();
 
 // Middleware
-app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -178,6 +182,8 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'API is running' });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`✓ Server is running on http://localhost:${PORT}`);
 });
+
+// Forced restart for route update debug-v3

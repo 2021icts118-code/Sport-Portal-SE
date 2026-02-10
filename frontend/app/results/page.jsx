@@ -151,7 +151,7 @@ export default function ResultsPage() {
                         {new Date(result.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                       </div>
                       <Link
-                        href={`/sports/${encodeURIComponent(result.sport?.name)}`}
+                        href={`/sports?sport=${encodeURIComponent(result.sport?.name)}`}
                         className="flex items-center gap-1.5 hover:text-blue-600 transition-colors"
                       >
                         <Target size={14} className="text-blue-400" />
@@ -213,7 +213,7 @@ export default function ResultsPage() {
                           <div className="flex flex-col">
                             <span className="text-sm font-black text-slate-900">{result.tournament?.title || result.tournament?.name}</span>
                             <span className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mt-0.5">
-                              <Link href={`/sports/${encodeURIComponent(result.sport?.name)}`} className="hover:underline">{result.sport?.name}</Link> • {new Date(result.date).toLocaleDateString()}
+                              <Link href={`/sports?sport=${encodeURIComponent(result.sport?.name)}`} className="hover:underline">{result.sport?.name}</Link> • {new Date(result.date).toLocaleDateString()}
                             </span>
                           </div>
                         </td>
@@ -306,7 +306,7 @@ export default function ResultsPage() {
                   </div>
                   <div>
                     <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-1">Competition Details</h4>
-                    <p className="text-sm text-slate-500 font-medium">Played in {selectedResult.location || 'University Sports Complex'} under the <Link href={`/sports/${encodeURIComponent(selectedResult.sport?.name)}`} className="text-blue-600 hover:underline">{selectedResult.sport?.name}</Link> championship guidelines.</p>
+                    <p className="text-sm text-slate-500 font-medium">Played in {selectedResult.location || 'University Sports Complex'} under the <Link href={`/sports?sport=${encodeURIComponent(selectedResult.sport?.name)}`} className="text-blue-600 hover:underline">{selectedResult.sport?.name}</Link> championship guidelines.</p>
                   </div>
                 </div>
 

@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const Club = require('../models/Club');
 const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
+const bcrypt = require('bcryptjs');
 
 
 // All routes here require admin access
@@ -10,6 +11,71 @@ router.use(authMiddleware);
 router.use(adminMiddleware);
 
 // --- User Management ---
+
+// --- User Management ---
+
+// Create user
+// Create user
+router.post('/users', async (req, res) => {
+    console.log("=== POST /api/admin/users HIT ===");
+    console.log("Headers:", req.headers);
+    console.log("Body:", req.body);
+
+    try {
+        const { firstName, lastName, email, role, password, studentId, faculty } = req.body;
+
+        // Basic validation
+        if (!email || !password) {
+            console.log("Missing fields:", { email: !!email, password: !!password });
+            return res.status(400).json({ message: 'Email and password are required' });
+        }
+
+        // Check if user exists
+        console.log("Checking if user exists:", email);
+        const existing = await User.findOne({ email });
+        if (existing) {
+            console.log("User already exists. Sending 400:", { message: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
+        // Hash password
+        console.log("Hashing password...");
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Generate username if not provided (simple fallback)
+        const username = req.body.username || email.split('@')[0];
+
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword,
+            firstName,
+            lastName,
+            role: role || 'student',
+            studentId,
+            faculty
+        });
+
+        console.log("Saving user...");
+        await newUser.save();
+        console.log("User saved successfully");
+
+        // Return without password
+        const userResponse = newUser.toObject();
+        delete userResponse.password;
+
+        res.status(201).json(userResponse);
+
+    } catch (error) {
+        console.error("ERROR in POST /api/admin/users:", error);
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message || error.toString(),
+            details: error
+        });
+    }
+});
 
 // Get all users
 router.get('/users', async (req, res) => {

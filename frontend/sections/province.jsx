@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Trophy, Users, Calendar, Target, MapPin, Award, Filter, Search, ChevronRight, Sparkles, BarChart3, Shield, TrendingUp, Star, Clock, Loader2, X } from "lucide-react";
+import SportDetailsModal from "../components/SportDetailsModal";
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from 'next/navigation';
@@ -13,8 +14,7 @@ const UoVSportsPortal = () => {
   const [selectedSport, setSelectedSport] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("All");
-  const [selectedSportDetails, setSelectedSportDetails] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [viewingSportName, setViewingSportName] = useState(null);
   const router = useRouter();
 
   // Set isClient and mounted only on the client side
@@ -226,7 +226,7 @@ const UoVSportsPortal = () => {
 
   // Handle view sport details
   const handleViewDetails = (sport) => {
-    router.push(`/sports/${encodeURIComponent(sport.name)}`);
+    setViewingSportName(sport.name);
   };
 
   // Handle join club action with auth check
@@ -713,116 +713,14 @@ const UoVSportsPortal = () => {
       </div>
 
       {/* Sport Details Modal */}
-      {showModal && selectedSportDetails && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">{selectedSportDetails.name}</h2>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <X className="h-6 w-6 text-gray-500" />
-                </button>
-              </div>
-            </div>
-
-            <div className="p-6 space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Trophy className="h-8 w-8 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-gray-900">{selectedSportDetails.type} Sport</p>
-                  <p className="text-gray-600">{selectedSportDetails.players} active players</p>
-                </div>
-              </div>
-
-              <p className="text-gray-700">{selectedSportDetails.description}</p>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Users className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Players</p>
-                      <p className="text-gray-600">{selectedSportDetails.players} registered</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Star className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Rating</p>
-                      <p className="text-gray-600">{selectedSportDetails.rating}/5.0</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Award className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Clubs</p>
-                      <p className="text-gray-600">{selectedSportDetails.clubs.join(", ")}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium text-gray-900">Contact</p>
-                      <p className="text-gray-600">{selectedSportDetails.contact}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {selectedSportDetails.facilities && selectedSportDetails.facilities.length > 0 && (
-                <div className="border-t border-gray-200 pt-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Facilities</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedSportDetails.facilities.map((facility, index) => (
-                      <span key={index} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                        {facility}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {selectedSportDetails.achievements && selectedSportDetails.achievements.length > 0 && (
-                <div className="border-t border-gray-200 pt-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Achievements</h3>
-                  <div className="space-y-2">
-                    {selectedSportDetails.achievements.map((achievement, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                        <span className="text-gray-700">{achievement}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={handleJoinClubAction}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
-                >
-                  <Users className="h-5 w-5" />
-                  Join Club
-                </button>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      {viewingSportName && (
+        <SportDetailsModal
+          sportName={viewingSportName}
+          onClose={() => setViewingSportName(null)}
+        />
       )}
-    </div>
+
+    </div >
   );
 };
 

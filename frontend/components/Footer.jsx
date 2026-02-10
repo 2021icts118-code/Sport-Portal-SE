@@ -124,7 +124,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/sports/Athletics"
+                  href="/sports?sport=Athletics"
                   className="flex items-center gap-2 hover:text-emerald-300 transition-colors"
                 >
                   <span className="h-4 w-4 flex items-center justify-center">🏃‍♂️</span>
@@ -142,7 +142,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/sports/Athletics"
+                  href="/sports?sport=Athletics"
                   className="flex items-center gap-2 hover:text-emerald-300 transition-colors"
                 >
                   <span className="h-4 w-4 flex items-center justify-center">🏆</span>

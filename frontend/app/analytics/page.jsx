@@ -1,4 +1,4 @@
-import Navbar from "../../components/Navbar";
+/*import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { BarChart3, TrendingUp, Award } from "lucide-react";
 
@@ -38,4 +38,4 @@ export default function AnalyticsPage() {
             <Footer />
         </main>
     );
-}
+}*/

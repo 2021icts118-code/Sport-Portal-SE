@@ -271,7 +271,7 @@ export default function TournamentsPage() {
                       {tournament.title}
                     </h3>
                     <Link
-                      href={`/sports/${encodeURIComponent(tournament.sport.charAt(0).toUpperCase() + tournament.sport.slice(1))}`}
+                      href={`/sports?sport=${encodeURIComponent(tournament.sport.charAt(0).toUpperCase() + tournament.sport.slice(1))}`}
                       className="flex items-center gap-2 text-gray-600 mb-2 hover:text-blue-600 transition-colors"
                     >
                       <Trophy className="h-4 w-4" />
@@ -365,7 +365,7 @@ export default function TournamentsPage() {
               <div className="p-6 space-y-6">
                 <div className="flex items-center gap-2">
                   <Link
-                    href={`/sports/${encodeURIComponent(selectedTournament.sport.charAt(0).toUpperCase() + selectedTournament.sport.slice(1))}`}
+                    href={`/sports?sport=${encodeURIComponent(selectedTournament.sport.charAt(0).toUpperCase() + selectedTournament.sport.slice(1))}`}
                     className="flex items-center gap-2 hover:text-blue-600 transition-colors"
                   >
                     <Trophy className="h-5 w-5 text-blue-600" />

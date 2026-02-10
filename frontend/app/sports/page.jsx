@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Trophy,
   Users,
@@ -14,10 +14,25 @@ import {
   Award,
   Zap
 } from "lucide-react";
+import SportDetailsModal from "../../components/SportDetailsModal";
 
 export default function SportsPage() {
   const [activeCategory, setActiveCategory] = useState("all");
+  const [selectedSport, setSelectedSport] = useState(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const sport = searchParams.get("sport");
+    if (sport) {
+      setSelectedSport(sport);
+    }
+  }, [searchParams]);
+
+  const handleCloseModal = () => {
+    setSelectedSport(null);
+    router.push("/sports", { scroll: false });
+  };
 
   const handleJoinClubAction = (sportName) => {
     const user = typeof window !== "undefined" ? localStorage.getItem("user") : null;
@@ -237,10 +252,10 @@ export default function SportsPage() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <Link href={`/sports/${encodeURIComponent(sport.name)}`} className="flex items-center gap-3 mb-2 hover:opacity-80 transition-opacity">
+                  <button onClick={() => setSelectedSport(sport.name)} className="flex items-center gap-3 mb-2 hover:opacity-80 transition-opacity text-left w-full">
                     <span className="text-3xl">{sport.icon}</span>
                     <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">{sport.name}</h3>
-                  </Link>
+                  </button>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${sport.category === "team"
                     ? "bg-blue-500/20 text-blue-400"
                     : "bg-green-500/20 text-green-400"
@@ -293,16 +308,24 @@ export default function SportsPage() {
                     <Calendar className="h-4 w-4" />
                   </button>
                 </div>
-                <Link
-                  href={`/sports/${encodeURIComponent(sport.name)}`}
+                <button
+                  onClick={() => setSelectedSport(sport.name)}
                   className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
                 >
                   View Full Details
-                </Link>
+                </button>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Modal */}
+        {selectedSport && (
+          <SportDetailsModal
+            sportName={selectedSport}
+            onClose={() => setSelectedSport(null)}
+          />
+        )}
 
         {/* Call to Action */}
         <div className="text-center mt-12">
@@ -331,6 +354,12 @@ export default function SportsPage() {
           </div>
         </div>
       </div>
+      {selectedSport && (
+        <SportDetailsModal
+          sportName={selectedSport}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 }

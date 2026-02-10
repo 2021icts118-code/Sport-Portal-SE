@@ -40,4 +40,16 @@ router.put('/:id', authMiddleware, async (req, res) => {
   }
 });
 
+router.post('/', async (req, res) => {
+  try {
+    console.log('Received User POST:', req.body);
+    const doc = new User(req.body);
+    await doc.save();
+    res.json(doc);
+  } catch (err) {
+    console.error('User POST Error:', err);
+    res.status(400).json({ message: err.message || 'Unknown error occurred', error: err.toString() });
+  }
+});
+
 module.exports = router;

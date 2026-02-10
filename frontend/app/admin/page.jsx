@@ -73,7 +73,7 @@ export default function AdminDashboard() {
             const savedUser = localStorage.getItem("user");
             if (!savedUser) return;
             const token = localStorage.getItem("token");
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+            const API_URL = ""; // Use relative path for proxy support
 
             // Helper to fetch and set state with error handling
             const safeFetch = async (endpoint, setter, headers = {}) => {
@@ -222,9 +222,19 @@ export default function AdminDashboard() {
         try {
             const token = localStorage.getItem("token");
             const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
+            // Fix: Construct URL correctly. endpoint is like 'admin/users'
+            // If data has _id and we are editing, append it.
             const url = isEdit ? `${API_URL}/api/${endpoint}/${data._id}` : `${API_URL}/api/${endpoint}`;
             const method = isEdit ? 'PUT' : 'POST';
 
+            // Sanitize data
+            const sanitizedData = { ...data };
+            if (sanitizedData.password) sanitizedData.password = sanitizedData.password.trim();
+
+            console.log(`Sending ${method} request to ${url}`, sanitizedData);
+
+            console.log(`Sending ${method} request to ${url}`);
             const res = await fetch(url, {
                 method,
                 headers: {
@@ -234,17 +244,46 @@ export default function AdminDashboard() {
                 body: JSON.stringify(data)
             });
 
-            if (res.ok) {
-                const savedItem = await res.json();
-                if (isEdit) {
-                    setter(prev => prev.map(item => item._id === savedItem._id ? savedItem : item));
+            const responseText = await res.text();
+            console.log(`Response status: ${res.status}`);
+            console.log(`Response body raw: "${responseText}"`);
+
+            let responseData = {};
+            try {
+                if (!responseText || !responseText.trim()) {
+                    console.warn("Empty response received from server");
+                    responseData = { message: "Server returned empty response." };
+                } else if (responseText.trim().startsWith('{')) {
+                    responseData = JSON.parse(responseText);
                 } else {
-                    setter(prev => [...prev, savedItem]);
+                    console.error("Non-JSON response received:", responseText);
+                    responseData = { message: `Server returned non-JSON: ${res.status} ${res.statusText}. Check console for details.` };
                 }
-                setModalData(null);
-                showNotification(`Item ${isEdit ? 'updated' : 'created'} successfully`);
+            } catch (e) {
+                console.error("Failed to parse JSON response", e);
+                responseData = { message: `JSON Parse Error: ${e.message}` };
             }
-        } catch (error) { showNotification("Failed to save item", "error"); }
+
+            if (!res.ok) {
+                console.error("Server error data:", responseData);
+                showNotification(responseData.message || `Server error: ${res.status} ${res.statusText}`, "error");
+                return;
+            }
+
+            const savedItem = responseData;
+
+            if (isEdit) {
+                setter(prev => prev.map(item => item._id === savedItem._id ? savedItem : item));
+            } else {
+                setter(prev => [...prev, savedItem]);
+            }
+            setModalData(null);
+            showNotification(`Item ${isEdit ? 'updated' : 'created'} successfully`);
+
+        } catch (error) {
+            console.error("Network/Client error:", error);
+            showNotification(error.message || "Failed to save item", "error");
+        }
     };
 
     const statsOverview = [
@@ -521,6 +560,14 @@ export default function AdminDashboard() {
                                         <Plus size={14} /> New Club
                                     </button>
                                 )}
+                                {activeTab === "users" && (
+                                    <button
+                                        onClick={() => setModalData({ type: 'users', data: {} })}
+                                        className="px-4 py-2 bg-blue-600 text-white text-[10px] font-black rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-100 flex items-center gap-2 uppercase tracking-widest transition-all"
+                                    >
+                                        <Plus size={14} /> New User
+                                    </button>
+                                )}
                             </div>
 
                             {/* Tables Content */}
@@ -639,7 +686,7 @@ export default function AdminDashboard() {
                                         ))}
                                     </div>
                                 )}
-
+                                {/*Join Request */}
                                 {activeTab === "requests" && (
                                     <div className="bg-white">
                                         {pendingRequests.length === 0 ? (
@@ -731,7 +778,7 @@ export default function AdminDashboard() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100">
-                                        {tournaments.map(t => (
+                                        {tournaments.filter(t => t.title !== "Athletics").map(t => (
                                             <tr key={t._id} className="hover:bg-blue-50/30 transition-all group">
                                                 <td className="px-8 py-5 text-sm font-black text-slate-900">{t.title}</td>
                                                 <td className="px-8 py-5 text-xs font-bold text-slate-500">{t.sport?.name || 'All'}</td>
@@ -1105,6 +1152,13 @@ export default function AdminDashboard() {
                                     setter = setUsers;
                                 }
 
+                                // Handle data transformation for nested fields
+                                if (modalData.type === 'gallery' && data.imageUrl) {
+                                    data.images = [{ url: data.imageUrl }];
+                                    delete data.imageUrl; // Generic field cleanup
+                                }
+
+                                console.log("Form Data Submitted:", { ...modalData.data, ...data });
                                 handleSave(endpoint, { ...modalData.data, ...data }, setter, !!modalData.edit);
                             }} className="p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
                                 {modalData.type === 'users' && (
@@ -1123,6 +1177,12 @@ export default function AdminDashboard() {
                                             <label className="text-[10px] font-black uppercase text-slate-400">Email Address</label>
                                             <input name="email" type="email" defaultValue={modalData.data.email} required placeholder="e.g. kamal@uov.ac.lk" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
                                         </div>
+                                        {!modalData.edit && (
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">Password</label>
+                                                <input name="password" type="password" required placeholder="••••••••" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                            </div>
+                                        )}
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Role</label>
                                             <select name="role" defaultValue={modalData.data.role || 'student'} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
@@ -1139,6 +1199,13 @@ export default function AdminDashboard() {
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Tournament Title</label>
                                             <input name="title" defaultValue={modalData.data.title} required placeholder="e.g. UOV Inter-Faculty Cricket / වවුනියා විශ්ව විද්‍යාලයීය ක්‍රිකට්" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Sport</label>
+                                            <select name="sport" defaultValue={modalData.data.sport?._id || modalData.data.sport} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                                                <option value="">Select Sport</option>
+                                                {sports.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+                                            </select>
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Date</label>
@@ -1200,6 +1267,26 @@ export default function AdminDashboard() {
 
                                 {modalData.type === 'results' && (
                                     <>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">Sport</label>
+                                                <select name="sport" defaultValue={modalData.data.sport?._id || modalData.data.sport} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                                                    <option value="">Select Sport</option>
+                                                    {sports.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">Tournament</label>
+                                                <select name="tournament" defaultValue={modalData.data.tournament?._id || modalData.data.tournament} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                                                    <option value="">Select Tournament</option>
+                                                    {tournaments.map(t => <option key={t._id} value={t._id}>{t.title}</option>)}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Date</label>
+                                            <input type="date" name="date" defaultValue={modalData.data.date?.split('T')[0]} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                        </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Winner Name</label>
                                             <input name="winnerName" defaultValue={modalData.data.winnerName} placeholder="e.g. Faculty of Science / විද්‍යා පීඨය" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500/20" />
@@ -1246,6 +1333,21 @@ export default function AdminDashboard() {
                                                 <option value="individual">Individual</option>
                                             </select>
                                         </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">Popularity</label>
+                                                <select name="popularity" defaultValue={modalData.data.popularity || 'Medium'} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                                                    <option value="Very High">Very High</option>
+                                                    <option value="High">High</option>
+                                                    <option value="Medium">Medium</option>
+                                                    <option value="Low">Low</option>
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">Players Count</label>
+                                                <input type="number" name="players" defaultValue={modalData.data.players || 0} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                            </div>
+                                        </div>
                                     </>
                                 )}
 
@@ -1254,6 +1356,22 @@ export default function AdminDashboard() {
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Club Name</label>
                                             <input name="name" defaultValue={modalData.data.name} required placeholder="e.g. UOV Elle Club / වවුනියා විශ්ව විද්‍යාලයීය එල්ලේ සංගමය" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">Sport</label>
+                                                <select name="sport" defaultValue={modalData.data.sport?._id || modalData.data.sport} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                                                    <option value="">Select Sport</option>
+                                                    {sports.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase text-slate-400">Category</label>
+                                                <select name="category" defaultValue={modalData.data.category || 'team'} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                                                    <option value="team">Team</option>
+                                                    <option value="individual">Individual</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Description</label>
@@ -1267,6 +1385,15 @@ export default function AdminDashboard() {
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase text-slate-400">Program Name</label>
                                             <input name="name" defaultValue={modalData.data.name} required placeholder="e.g. Beginner Swimming / පිහිනුම් පුහුණුව" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase text-slate-400">Coach</label>
+                                            <select name="coach" defaultValue={modalData.data.coach?._id || modalData.data.coach} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                                                <option value="">Select Coach</option>
+                                                {users.filter(u => u.role === 'coach' || u.role === 'admin').map(u => (
+                                                    <option key={u._id} value={u._id}>{u.firstName} {u.lastName}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="space-y-2">

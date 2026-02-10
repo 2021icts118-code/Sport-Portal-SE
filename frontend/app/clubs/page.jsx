@@ -43,7 +43,8 @@ function ClubsContent() {
 
   const fetchClubs = async () => {
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+      // Use relative path for proxy
+      const API_URL = "";
       const res = await fetch(`${API_URL}/api/clubs?t=${new Date().getTime()}`, {
         cache: 'no-store',
         headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
@@ -278,6 +279,7 @@ function ClubsContent() {
             </button>
           </div>
 
+          {/*seacrch bar*/}
           <div className="relative w-full md:w-80">
             <input
               type="text"
@@ -373,7 +375,6 @@ function ClubsContent() {
         </div>
       </div>
 
-      {/* Club Details Modal */}
       {/* Club Details Modal */}
       {showModal && selectedClub && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-200">

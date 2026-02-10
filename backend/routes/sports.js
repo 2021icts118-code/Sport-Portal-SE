@@ -33,9 +33,15 @@ router.get('/:id', async (req, res) => {
 
 // POST create
 router.post('/', async (req, res) => {
-  const doc = new Sport(req.body);
-  await doc.save();
-  res.json(doc);
+  try {
+    console.log('Received Sport POST:', req.body);
+    const doc = new Sport(req.body);
+    await doc.save();
+    res.json(doc);
+  } catch (err) {
+    console.error('Sport POST Error:', err);
+    res.status(400).json({ message: err.message || 'Unknown error occurred', error: err.toString() });
+  }
 });
 
 // PUT update
